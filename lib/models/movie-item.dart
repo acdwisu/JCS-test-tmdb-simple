@@ -1,4 +1,4 @@
-class NowPlayingModel {
+class MovieItemModel {
   final String? posterPath;
   final bool adult;
   final String overview;
@@ -14,7 +14,7 @@ class NowPlayingModel {
   final bool video;
   final num voteAvg;
 
-  NowPlayingModel({required this.posterPath,
+  MovieItemModel({required this.posterPath,
     required this.adult,
     required this.overview,
     required this.releaseDate,
@@ -29,8 +29,8 @@ class NowPlayingModel {
     required this.video,
     required this.voteAvg});
 
-  factory NowPlayingModel.fromJson(Map m) =>
-      NowPlayingModel(posterPath: m['poster_path'],
+  factory MovieItemModel.fromJson(Map m) =>
+      MovieItemModel(posterPath: m['poster_path'],
           adult: m['adult'],
           overview: m['overview'],
           releaseDate: m['release_date'],
