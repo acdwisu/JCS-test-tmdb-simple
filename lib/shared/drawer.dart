@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:jcs_test/pages/home/home.dart';
+import 'package:jcs_test/pages/now-playing/main.dart';
 
 import '../models/menu-enum.dart';
 
 class DrawerMenu extends StatelessWidget {
   final MenuOption menuOption;
   final VoidCallback drawerCloser;
+  final void Function(MenuOption) onMenuSelected;
 
   const DrawerMenu(
-      {Key? key, required this.menuOption, required this.drawerCloser})
+      {Key? key,
+      required this.menuOption,
+      required this.drawerCloser,
+      required this.onMenuSelected})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: MediaQuery.of(context).size.width*0.8,
+      width: MediaQuery.of(context).size.width * 0.8,
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
@@ -22,33 +28,33 @@ class DrawerMenu extends StatelessWidget {
               icon: Icons.home,
               menuOption: MenuOption.Home,
               text: 'Home',
-              onTap: () => print('Tap My Files')),
+              ),
           _drawerItem(
               icon: Icons.play_circle_fill,
               menuOption: MenuOption.NowPlaying,
               text: 'Now Playing',
-              onTap: () => print('Tap Shared menu')),
+              ),
           _drawerItem(
               icon: Icons.show_chart,
               menuOption: MenuOption.TopRated,
               text: 'Top Rated',
-              onTap: () => print('Tap Recent menu')),
+              ),
           _drawerItem(
               icon: Icons.people_alt_rounded,
               menuOption: MenuOption.Popular,
-              text: 'popular',
-              onTap: () => print('Tap Recent menu')),
+              text: 'Popular',
+              ),
           _drawerItem(
               icon: Icons.upcoming,
               menuOption: MenuOption.Upcoming,
               text: 'Upcoming',
-              onTap: () => print('Tap Trash menu')),
+              ),
           const Divider(height: 25, thickness: 1),
           _drawerItem(
               icon: Icons.help,
               menuOption: MenuOption.About,
               text: 'About',
-              onTap: () => print('Tap Family menu')),
+              ),
         ],
       ),
     );
@@ -73,7 +79,6 @@ class DrawerMenu extends StatelessWidget {
     required MenuOption menuOption,
     required IconData icon,
     required String text,
-    GestureTapCallback? onTap,
   }) {
     final selected = this.menuOption == menuOption;
 
@@ -94,7 +99,13 @@ class DrawerMenu extends StatelessWidget {
           ),
         ],
       ),
-      onTap: onTap,
+      onTap: () => _menuSelectHandler(menuOption),
     );
+  }
+
+  void _menuSelectHandler(MenuOption menuOption) {
+    if(this.menuOption != menuOption) {
+      onMenuSelected(menuOption);
+    }
   }
 }

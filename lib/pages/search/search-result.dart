@@ -5,6 +5,7 @@ import 'package:jcs_test/injection.dart';
 import 'package:jcs_test/services/repository/movie-repository.dart';
 
 import '../../models/search-result.dart';
+import '../../services/utils/common.dart';
 import '../../services/utils/constant.dart';
 
 class SearchResult extends StatefulWidget {
@@ -77,50 +78,111 @@ class _SearchResultState extends State<SearchResult> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return PagedListView<int, SearchResultModel>(
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<SearchResultModel>(
-        itemBuilder: (context, item, index) => Card(
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.horizontal(
-                  left: Radius.circular(6)
-                ),
-                child: CachedNetworkImage(
-                  imageUrl: '$baseUrlImage/w500/${item.posterPath}',
-                  fit: BoxFit.fitHeight,
-                  height: 100,
-                  width: 60,
-                  placeholder: (context, url) => const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    color: Colors.black12,
-                    child: const Center(child: Icon(Icons.broken_image))
-                  ),
-                ),
-              ),
-              Expanded(
-                child: ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 10
-                  ),
-                  title: Text(
-                    item.title,
-                    maxLines: 1,
-                  ),
-                  subtitle: Text(
-                    item.overview,
-                    maxLines: 2,
-                  ),
-                  isThreeLine: true,
+        itemBuilder: (context, item, index) {
+          final vote = (item.voteAvg * 10).round();
 
-                ),
+          return Card(
+              child: Row(
+                children: [
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.horizontal(
+                            left: Radius.circular(6)),
+                        child: CachedNetworkImage(
+                          imageUrl: '$baseUrlImage/w500/${item.posterPath}',
+                          fit: BoxFit.fitHeight,
+                          height: 100,
+                          width: 60,
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                              color: Colors.black12,
+                              child: const Center(
+                                  child: Icon(Icons.broken_image))),
+                        ),
+                      ),
+                      Positioned(
+                        right: 2,
+                        top: 2,
+                        child: Material(
+                          shape: CircleBorder(
+                              side: BorderSide(color: rateToColor(vote), width: 1)),
+                          color: Colors.black,
+                          child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: RichText(
+                                text: TextSpan(children: [
+                                  TextSpan(
+                                    text: vote.toString(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 8
+                                    ),
+                                  ),
+                                  const TextSpan(
+                                    text: '%',
+                                    style: TextStyle(
+                                        fontSize: 6,
+                                        color: Colors.white,
+                                    ),
+                                  )
+                                ]),
+                              )),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 3),
+                            child: Text(
+                              item.title,
+                              maxLines: 1,
+                              style: textTheme.labelSmall?.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          if (item.releaseDate != null && item.releaseDate!.isNotEmpty)
+                            Text(
+                              dateFormatter.format(DateTime.parse(item.releaseDate!)),
+                              style: textTheme.caption,
+                            ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            item.overview,
+                            maxLines: 2,
+                            style: textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.normal,
+                                color: Colors.black),
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            );
+        },
       )
     );
   }

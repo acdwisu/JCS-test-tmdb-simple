@@ -4,7 +4,7 @@ import 'package:jcs_test/injection.dart';
 import 'package:jcs_test/pages/blocs/now-playing/now_playing_bloc.dart';
 import 'package:jcs_test/pages/blocs/popular/popular_bloc.dart';
 import 'package:jcs_test/pages/blocs/upcoming/upcoming_bloc.dart';
-import 'package:jcs_test/pages/home/home.dart';
+import 'package:jcs_test/pages/main-page.dart';
 import 'package:provider/provider.dart';
 
 import 'pages/blocs/top-rated/top_rated_bloc.dart';
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
             create: (context) => locator<UpcomingBloc>(),
           ),
         ],
-        child: const HomePage(),
+        child: const MainPage(),
       ),
       // home: const HomePage(),
     );
