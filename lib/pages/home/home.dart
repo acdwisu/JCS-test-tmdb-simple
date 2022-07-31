@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jcs_test/models/menu-enum.dart';
 import 'package:jcs_test/models/request-state-enum.dart';
 import 'package:jcs_test/pages/blocs/now-playing/now_playing_bloc.dart';
 import 'package:jcs_test/pages/blocs/top-rated/top_rated_bloc.dart';
@@ -11,7 +12,9 @@ import '../blocs/popular/popular_bloc.dart';
 import '../blocs/upcoming/upcoming_bloc.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final void Function(MenuOption) menuSelectHandler;
+
+  const HomePage({Key? key, required this.menuSelectHandler}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -33,7 +36,7 @@ class _HomePageState extends State<HomePage> {
               title: 'Now Playing',
               bigItems: true,
               moreTrigger: () {
-
+                widget.menuSelectHandler(MenuOption.NowPlaying);
               },
               refreshTrigger: () {
                 context.read<NowPlayingBloc>().add(

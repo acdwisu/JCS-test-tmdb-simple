@@ -93,7 +93,7 @@ class _SearchResultState extends State<SearchResult> {
                     children: [
                       ClipRRect(
                         borderRadius: const BorderRadius.horizontal(
-                            left: Radius.circular(6)),
+                            left: Radius.circular(4)),
                         child: CachedNetworkImage(
                           imageUrl: '$baseUrlImage/w500/${item.posterPath}',
                           fit: BoxFit.fitHeight,

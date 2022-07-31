@@ -7,6 +7,7 @@ import 'package:jcs_test/pages/upcoming/main.dart';
 
 import '../models/search-result.dart';
 import '../shared/drawer.dart';
+import 'about/main.dart';
 import 'now-playing/main.dart';
 import 'search/search-delegate.dart';
 
@@ -25,6 +26,12 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        if(_currentMenu!=MenuOption.Home) {
+          _menuChangeHandler(MenuOption.Home);
+
+          return false;
+        }
+
         return await showDialog<bool>(
             context: context,
             builder: (context) => WillPopScope(
@@ -86,14 +93,20 @@ class _MainPageState extends State<MainPage> {
           drawerCloser: () {
             _scaffoldKey.currentState?.closeDrawer();
           },
-          onMenuSelected: (value) => setState(() {
-            _currentMenu = value;
-            _scaffoldKey.currentState?.closeDrawer();
-          }),
+          onMenuSelected: _menuChangeHandler,
         ),
         body: _content,
       ),
     );
+  }
+
+  void _menuChangeHandler(MenuOption menuOption) {
+    if(mounted) {
+      setState(() {
+        _currentMenu = menuOption;
+        _scaffoldKey.currentState?.closeDrawer();
+      });
+    }
   }
 
   String get _titleText {
@@ -116,9 +129,11 @@ class _MainPageState extends State<MainPage> {
   Widget get _content {
     switch(_currentMenu) {
       case MenuOption.About:
-        return Container();
+        return const AboutPage();
       case MenuOption.Home:
-        return const HomePage();
+        return HomePage(
+          menuSelectHandler: _menuChangeHandler,
+        );
       case MenuOption.Popular:
         return const PopularPage();
       case MenuOption.NowPlaying:

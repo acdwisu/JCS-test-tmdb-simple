@@ -38,18 +38,21 @@ class CardTiles extends StatelessWidget {
               if(!hasData)
                 InkResponse(
                   onTap: refreshTrigger,
-                  child: const Icon(
-                    Icons.refresh
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0
+                    ),
+                    child: const Icon(
+                      Icons.refresh
+                    ),
                   ),
                 ),
               InkResponse(
+                onTap: moreTrigger,
                 child: Text(
                   'MORE',
                   style: textTheme.caption,
                 ),
-                onTap: () {
-
-                },
               ),
             ],
           ),

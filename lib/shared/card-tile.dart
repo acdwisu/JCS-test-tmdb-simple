@@ -17,9 +17,10 @@ class CardTile extends StatelessWidget {
     return Stack(
       children: [
         SizedBox(
-          width: bigItem? 170 : 130,
+          width: bigItem? 165 : 130,
           child: Card(
             child: InkWell(
+              borderRadius: BorderRadius.circular(4),
               onTap: () {
                 // Navigator.pushNamed(
                 //   context,
@@ -33,7 +34,7 @@ class CardTile extends StatelessWidget {
                   Expanded(
                     child: ClipRRect(
                       borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(6)
+                          top: Radius.circular(4)
                       ),
                       child: CachedNetworkImage(
                         imageUrl: '$baseUrlImage/w500/${item.posterUrl}',
@@ -41,7 +42,10 @@ class CardTile extends StatelessWidget {
                         placeholder: (context, url) => const Center(
                           child: CircularProgressIndicator(),
                         ),
-                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                        errorWidget: (context, url, error) => Container(
+                          color: Colors.black12,
+                          child: const Center(child: Icon(Icons.broken_image)),
+                        ),
                       ),
                     ),
                   ),
