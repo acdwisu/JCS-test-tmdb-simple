@@ -29,7 +29,9 @@ class MovieSearcher extends SearchDelegate<SearchResultModel?> {
   Widget buildResults(BuildContext context) {
     return SearchResult(
       query: query,
-      onSelected: (value) => close(context, value),
+      onSelected: (value) {
+
+      },
     );
   }
 

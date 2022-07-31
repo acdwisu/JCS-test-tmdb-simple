@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:jcs_test/injection.dart';
 import 'package:jcs_test/services/repository/movie-repository.dart';
 
 import '../../models/search-result.dart';
+import '../../services/utils/constant.dart';
 
 class SearchResult extends StatefulWidget {
   final String query;
@@ -78,11 +80,46 @@ class _SearchResultState extends State<SearchResult> {
     return PagedListView<int, SearchResultModel>(
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<SearchResultModel>(
-        itemBuilder: (context, item, index) => ListTile(
-          title: Text(
-            item.title
+        itemBuilder: (context, item, index) => Card(
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.horizontal(
+                  left: Radius.circular(6)
+                ),
+                child: CachedNetworkImage(
+                  imageUrl: '$baseUrlImage/w500/${item.posterPath}',
+                  fit: BoxFit.fitHeight,
+                  height: 100,
+                  width: 60,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.black12,
+                    child: const Center(child: Icon(Icons.broken_image))
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListTile(
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 10
+                  ),
+                  title: Text(
+                    item.title,
+                    maxLines: 1,
+                  ),
+                  subtitle: Text(
+                    item.overview,
+                    maxLines: 2,
+                  ),
+                  isThreeLine: true,
+
+                ),
+              ),
+            ],
           ),
-          onTap: () => widget.onSelected(item),
         ),
       )
     );
