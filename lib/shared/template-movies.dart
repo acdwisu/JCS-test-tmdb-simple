@@ -22,7 +22,7 @@ class TemplateMovies extends StatefulWidget {
 
 class _TemplateMoviesState extends State<TemplateMovies> {
   final PagingController<int, MovieItemModel> _pagingController =
-  PagingController(firstPageKey: 1);
+    PagingController(firstPageKey: 1);
 
   @override
   void initState() {
@@ -67,26 +67,25 @@ class _TemplateMoviesState extends State<TemplateMovies> {
 
   @override
   Widget build(BuildContext context) {
-    return PagedGridView<int, MovieItemModel>(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 1/2
-        ),
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<MovieItemModel>(
-          itemBuilder: (context, item, index) {
-            final vote = (item.voteAvg * 10).round();
-
-            return CardTile(
-              item: CardTileItemModel(
-                  title: item.title,
-                  releaseDate: dateFormatter.format(DateTime.parse(item.releaseDate)),
-                  posterUrl: "$baseUrlImage/w500/${item.posterPath}",
-                  vote: vote),
-              bigItem: true,
-            );
-          },
-        )
+    return RefreshIndicator(
+      onRefresh: () async {
+        _pagingController.refresh();
+      },
+      child: PagedGridView<int, MovieItemModel>(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 1/2
+          ),
+          pagingController: _pagingController,
+          builderDelegate: PagedChildBuilderDelegate<MovieItemModel>(
+            itemBuilder: (context, item, index) {
+              return CardTile(
+                item: item,
+                bigItem: true,
+              );
+            },
+          )
+      ),
     );
   }
 }

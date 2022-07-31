@@ -1,6 +1,7 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
+import 'package:jcs_test/pages/blocs/detail/detail_bloc.dart';
 import 'package:jcs_test/services/repository/movie-repository.dart';
 import 'package:jcs_test/services/rest/movie-http-datasource.dart';
 import 'package:jcs_test/services/rest/movie-remote-datasource.dart';
@@ -42,6 +43,9 @@ void initInjection() {
       movieRepository: locator()
   ));
   locator.registerFactory(() => UpcomingBloc(
+      movieRepository: locator()
+  ));
+  locator.registerFactory(() => DetailBloc(
       movieRepository: locator()
   ));
 }

@@ -22,114 +22,97 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  void initState() {
+    super.initState();
+
+    _fetchData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        BlocBuilder<NowPlayingBloc, NowPlayingState>(
-          builder: (context, state) {
-            if (state.status == RequestState.Empty) {
-              context.read<NowPlayingBloc>().add(
-                  RequestNowPlayingEvent(page: 1));
-            }
-
-            return CardTiles(
-              title: 'Now Playing',
-              bigItems: true,
-              moreTrigger: () {
-                widget.menuSelectHandler(MenuOption.NowPlaying);
-              },
-              refreshTrigger: () {
-                context.read<NowPlayingBloc>().add(
-                    RequestNowPlayingEvent(page: 1));
-              },
-              items: state.data?.data.map((e) => CardTileItemModel(
-                  title: e.title,
-                  releaseDate: e.releaseDate.isEmpty? null : dateFormatter.format(DateTime.parse(e.releaseDate)),
-                  posterUrl: e.posterPath,
-                  vote: e.voteAvg*10
-              )),
-            );
-          },
-        ),
-        BlocBuilder<TopRatedBloc, TopRatedState>(
-          builder: (context, state) {
-            if (state.status == RequestState.Empty) {
-              context.read<TopRatedBloc>().add(
-                  RequestTopRatedEvent(page: 1));
-            }
-
-            return CardTiles(
-              title: 'Top Rated',
-              bigItems: false,
-              moreTrigger: () {
-
-              },
-              refreshTrigger: () {
-                context.read<TopRatedBloc>().add(
-                    RequestTopRatedEvent(page: 1));
-              },
-              items: state.data?.data.map((e) => CardTileItemModel(
-                  title: e.title,
-                  releaseDate: e.releaseDate.isEmpty? null : dateFormatter.format(DateTime.parse(e.releaseDate)),
-                  posterUrl: e.posterPath,
-                  vote: e.voteAvg*10
-              )),
-            );
-          },
-        ),
-        BlocBuilder<PopularBloc, PopularState>(
-          builder: (context, state) {
-            if (state.status == RequestState.Empty) {
-              context.read<PopularBloc>().add(
-                  RequestPopularEvent(page: 1));
-            }
-
-            return CardTiles(
-              title: 'Popular',
-              bigItems: false,
-              moreTrigger: () {
-
-              },
-              refreshTrigger: () {
-                context.read<PopularBloc>().add(
-                    RequestPopularEvent(page: 1));
-              },
-              items: state.data?.data.map((e) => CardTileItemModel(
-                  title: e.title,
-                  releaseDate: e.releaseDate.isEmpty? null : dateFormatter.format(DateTime.parse(e.releaseDate)),
-                  posterUrl: e.posterPath,
-                  vote: e.voteAvg*10
-              )),
-            );
-          },
-        ),
-        BlocBuilder<UpcomingBloc, UpcomingState>(
-          builder: (context, state) {
-            if (state.status == RequestState.Empty) {
-              context.read<UpcomingBloc>().add(
-                  RequestUpcomingEvent(page: 1));
-            }
-
-            return CardTiles(
-              title: 'Upcoming',
-              bigItems: false,
-              moreTrigger: () {
-
-              },
-              refreshTrigger: () {
-                context.read<UpcomingBloc>().add(
-                    RequestUpcomingEvent(page: 1));
-              },
-              items: state.data?.data.map((e) => CardTileItemModel(
-                  title: e.title,
-                  releaseDate: e.releaseDate.isEmpty? null : dateFormatter.format(DateTime.parse(e.releaseDate)),
-                  posterUrl: e.posterPath,
-                  vote: e.voteAvg*10
-              )),
-            );
-          },
-        ),
-      ],
+    return RefreshIndicator(
+      onRefresh: () async {
+        _fetchData();
+      },
+      child: ListView(
+        children: [
+          BlocBuilder<NowPlayingBloc, NowPlayingState>(
+            builder: (context, state) {
+              return CardTiles(
+                title: 'Now Playing',
+                bigItems: true,
+                moreTrigger: () {
+                  widget.menuSelectHandler(MenuOption.NowPlaying);
+                },
+                refreshTrigger: () {
+                  context.read<NowPlayingBloc>().add(
+                      RequestNowPlayingEvent(page: 1));
+                },
+                items: state.data?.data,
+              );
+            },
+          ),
+          BlocBuilder<TopRatedBloc, TopRatedState>(
+            builder: (context, state) {
+              return CardTiles(
+                title: 'Top Rated',
+                bigItems: false,
+                moreTrigger: () {
+                  widget.menuSelectHandler(MenuOption.TopRated);
+                },
+                refreshTrigger: () {
+                  context.read<TopRatedBloc>().add(
+                      RequestTopRatedEvent(page: 1));
+                },
+                items: state.data?.data,
+              );
+            },
+          ),
+          BlocBuilder<PopularBloc, PopularState>(
+            builder: (context, state) {
+              return CardTiles(
+                title: 'Popular',
+                bigItems: false,
+                moreTrigger: () {
+                  widget.menuSelectHandler(MenuOption.Popular);
+                },
+                refreshTrigger: () {
+                  context.read<PopularBloc>().add(
+                      RequestPopularEvent(page: 1));
+                },
+                items: state.data?.data,
+              );
+            },
+          ),
+          BlocBuilder<UpcomingBloc, UpcomingState>(
+            builder: (context, state) {
+              return CardTiles(
+                title: 'Upcoming',
+                bigItems: false,
+                moreTrigger: () {
+                  widget.menuSelectHandler(MenuOption.Upcoming);
+                },
+                refreshTrigger: () {
+                  context.read<UpcomingBloc>().add(
+                      RequestUpcomingEvent(page: 1));
+                },
+                items: state.data?.data,
+              );
+            },
+          ),
+        ],
+      ),
     );
+  }
+
+  void _fetchData() {
+    context.read<UpcomingBloc>().add(
+        RequestUpcomingEvent(page: 1));
+    context.read<PopularBloc>().add(
+        RequestPopularEvent(page: 1));
+    context.read<TopRatedBloc>().add(
+        RequestTopRatedEvent(page: 1));
+    context.read<NowPlayingBloc>().add(
+        RequestNowPlayingEvent(page: 1));
   }
 }

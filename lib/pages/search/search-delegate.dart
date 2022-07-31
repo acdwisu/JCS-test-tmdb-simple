@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jcs_test/models/movie-item.dart';
 import 'package:jcs_test/models/search-result.dart';
 import 'package:jcs_test/pages/search/search-result.dart';
+
+import '../../injection.dart';
+import '../blocs/detail/detail_bloc.dart';
+import '../detail/main.dart';
 
 class MovieSearcher extends SearchDelegate<SearchResultModel?> {
   @override
@@ -30,7 +36,29 @@ class MovieSearcher extends SearchDelegate<SearchResultModel?> {
     return SearchResult(
       query: query,
       onSelected: (value) {
-
+        Navigator.push(context, MaterialPageRoute(builder: (context2) {
+          return BlocProvider(
+            create: (context) => locator<DetailBloc>(),
+            child: DetailPage(
+              movieItem: MovieItemModel(
+                video: value.video,
+                releaseDate: value.releaseDate?? '',
+                title: value.title,
+                id: value.id,
+                adult: value.adult,
+                backdropPath: value.backdropPath,
+                genreIds: value.genreIds,
+                originalLang: value.oriLang,
+                originalTitle: value.oriTitle,
+                overview: value.overview,
+                popularity: value.popularity,
+                posterPath: value.posterPath,
+                voteAvg: value.voteAvg,
+                voteCount: value.voteCount,
+              ),
+            ),
+          );
+        }));
       },
     );
   }

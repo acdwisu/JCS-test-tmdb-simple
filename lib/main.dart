@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jcs_test/injection.dart';
+import 'package:jcs_test/pages/blocs/detail/detail_bloc.dart';
 import 'package:jcs_test/pages/blocs/now-playing/now_playing_bloc.dart';
 import 'package:jcs_test/pages/blocs/popular/popular_bloc.dart';
 import 'package:jcs_test/pages/blocs/upcoming/upcoming_bloc.dart';

@@ -1,11 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:jcs_test/models/movie-item.dart';
 import 'package:jcs_test/shared/card-tile.dart';
 
 class CardTiles extends StatelessWidget {
   final String title;
-  final Iterable<CardTileItemModel>? items;
+  final Iterable<MovieItemModel>? items;
   final VoidCallback refreshTrigger;
   final VoidCallback moreTrigger;
   final bool bigItems;

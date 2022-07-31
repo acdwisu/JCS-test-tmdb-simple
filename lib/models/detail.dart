@@ -12,7 +12,7 @@ class DetailModel {
   final Iterable<GenreModel> genres;
   final String? homePage;
   final int id;
-  final int? imdbId;
+  final String? imdbId;
   final String oriLang;
   final String oriTitle;
   final String? overview;
@@ -23,7 +23,7 @@ class DetailModel {
   final String releaseDate;
   final int revenue;
   final int? runtime;
-  final Iterable<SpokenLangModel> spokenLanguges;
+  final Iterable<SpokenLangModel> spokenLanguages;
   final MovieDetailStatus status;
   final String? tagLine;
   final String title;
@@ -48,7 +48,7 @@ class DetailModel {
     required this.releaseDate,
     required this.revenue,
     required this.runtime,
-    required this.spokenLanguges,
+    required this.spokenLanguages,
     required this.status,
     required this.tagLine,
     required this.title,
@@ -60,7 +60,7 @@ class DetailModel {
     final genres = m['genres'] as List;
     final productionCompanies = m['production_companies'] as List;
     final productionCountries = m['production_countries'] as List;
-    final spokenLangs = m['spokenLanguges'] as List;
+    final spokenLangs = m['spoken_languages'] as List;
     final status = m['status'];
 
     return DetailModel(
@@ -81,7 +81,7 @@ class DetailModel {
       releaseDate: m['release_date'],
       revenue: m['revenue'],
       runtime: m['runtime'],
-      spokenLanguges: spokenLangs.map((e) => SpokenLangModel.fromJson(e)),
+      spokenLanguages: spokenLangs.map((e) => SpokenLangModel.fromJson(e)),
       status: movieDetailStatusFromString(status),
       tagLine: m['tagline'],
       title: m['title'],

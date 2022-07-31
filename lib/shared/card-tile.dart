@@ -1,11 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jcs_test/injection.dart';
+import 'package:jcs_test/models/movie-item.dart';
+import 'package:jcs_test/pages/detail/main.dart';
 
+import '../pages/blocs/detail/detail_bloc.dart';
 import '../services/utils/common.dart';
 import '../services/utils/constant.dart';
 
 class CardTile extends StatelessWidget {
-  final CardTileItemModel item;
+  final MovieItemModel item;
   final bool bigItem;
 
   const CardTile({Key? key, required this.item, required this.bigItem,}) : super(key: key);
@@ -13,6 +18,7 @@ class CardTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final vote = (item.voteAvg * 10).round();
 
     return Stack(
       children: [
@@ -22,11 +28,14 @@ class CardTile extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(4),
               onTap: () {
-                // Navigator.pushNamed(
-                //   context,
-                //   MovieDetailPage.routeName,
-                //   arguments: movie.id,
-                // );
+                Navigator.push(context, MaterialPageRoute(builder: (context2) {
+                  return BlocProvider(
+                    create: (context) => locator<DetailBloc>(),
+                    child: DetailPage(
+                      movieItem: item,
+                    ),
+                  );
+                }));
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +46,7 @@ class CardTile extends StatelessWidget {
                           top: Radius.circular(4)
                       ),
                       child: CachedNetworkImage(
-                        imageUrl: '$baseUrlImage/w500/${item.posterUrl}',
+                        imageUrl: '$baseUrlImage/w500/${item.posterPath}',
                         fit: BoxFit.fitHeight,
                         placeholder: (context, url) => const Center(
                           child: CircularProgressIndicator(),
@@ -67,7 +76,7 @@ class CardTile extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          item.releaseDate ?? '-',
+                          item.releaseDate.isNotEmpty? dateFormatter.format(DateTime.parse(item.releaseDate)) : '-',
                           style: textTheme.caption?.copyWith(
                               fontSize: bigItem? 12 : 10
                           ),
@@ -86,7 +95,7 @@ class CardTile extends StatelessWidget {
           child: Material(
             shape: CircleBorder(
                 side: BorderSide(
-                    color: rateToColor(item.vote),
+                    color: rateToColor(vote),
                     width: 3
                 )
             ),
@@ -97,7 +106,7 @@ class CardTile extends StatelessWidget {
                   text: TextSpan(
                       children: [
                         TextSpan(
-                          text: item.vote.round().toString(),
+                          text: vote.toString(),
                           style: textTheme.labelSmall?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold
@@ -120,16 +129,3 @@ class CardTile extends StatelessWidget {
     );
   }
 }
-
-class CardTileItemModel {
-  final String title;
-  final String? releaseDate;
-  final String? posterUrl;
-  final num vote;
-
-  CardTileItemModel({required this.title,
-    required this.releaseDate,
-    required this.posterUrl,
-    required this.vote});
-}
-
