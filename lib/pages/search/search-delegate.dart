@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:jcs_test/models/search-result.dart';
+import 'package:jcs_test/pages/search/search-result.dart';
 
-class CustomSearchDelegate extends SearchDelegate {
+class MovieSearcher extends SearchDelegate<SearchResultModel?> {
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
@@ -16,7 +18,7 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () {
         close(context, null);
       },
@@ -25,56 +27,9 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    if (query.length < 3) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Center(
-            child: Text(
-              "Search term must be longer than two letters.",
-            ),
-          )
-        ],
-      );
-    }
-
-    return Column(
-      children: <Widget>[
-        //Build the results based on the searchResults stream in the searchBloc
-        StreamBuilder(
-          stream: InheritedBlocs.of(context).searchBloc.searchResults,
-          builder: (context, AsyncSnapshot<List<Result>> snapshot) {
-            if (!snapshot.hasData) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Center(child: CircularProgressIndicator()),
-                ],
-              );
-            } else if (snapshot.data.length == 0) {
-              return Column(
-                children: <Widget>[
-                  Text(
-                    "No Results Found.",
-                  ),
-                ],
-              );
-            } else {
-              var results = snapshot.data;
-              return ListView.builder(
-                itemCount: results.length,
-                itemBuilder: (context, index) {
-                  var result = results[index];
-                  return ListTile(
-                    title: Text(result.title),
-                  );
-                },
-              );
-            }
-          },
-        ),
-      ],
+    return SearchResult(
+      query: query,
+      onSelected: (value) => close(context, value),
     );
   }
 
@@ -84,4 +39,31 @@ class CustomSearchDelegate extends SearchDelegate {
     // If you want to add search suggestions as the user enters their search term, this is the place to do that.
     return Column();
   }
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    final theme = Theme.of(context);
+    final appBarTheme = theme.appBarTheme;
+
+    return theme.copyWith(
+      appBarTheme: appBarTheme.copyWith(
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white
+      ),
+      hintColor: Colors.white,
+      textTheme: theme.textTheme.copyWith(
+        headline6: theme.textTheme.headline6?.copyWith(
+          color: Colors.white
+        )
+      ),
+      textSelectionTheme: const TextSelectionThemeData(
+        cursorColor: Colors.white,
+        selectionColor: Colors.black12,
+        selectionHandleColor: Colors.black12,
+      )
+    );
+  }
+
+  @override
+  String? get searchFieldLabel => 'Search Here..';
 }

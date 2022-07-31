@@ -34,7 +34,7 @@ class MovieItemModel {
           adult: m['adult'],
           overview: m['overview'],
           releaseDate: m['release_date'],
-          genreIds: m['genre_ids'],
+          genreIds: (m['genre_ids'] as List).cast<int>(),
           id: m['id'],
           originalTitle: m['original_title'],
           originalLang: m['original_language'],
@@ -43,5 +43,5 @@ class MovieItemModel {
           popularity: m['popularity'],
           voteCount: m['vote_count'],
           video: m['video'],
-          voteAvg: m['voteAvg']);
+          voteAvg: m['vote_average']);
 }

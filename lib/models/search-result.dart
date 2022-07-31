@@ -2,7 +2,7 @@ class SearchResultModel {
   final String? posterPath;
   final bool adult;
   final String overview;
-  final String releaseDate;
+  final String? releaseDate;
   final List<int> genreIds;
   final int id;
   final String oriTitle;
@@ -30,12 +30,12 @@ class SearchResultModel {
       required this.video,
       required this.voteAvg});
   
-  factory SearchResultModel.fromMap(Map m) => SearchResultModel(
+  factory SearchResultModel.fromJson(Map m) => SearchResultModel(
       posterPath: m['poster_path'],
       adult: m['adult'],
       overview: m['overview'],
       releaseDate: m['release_date'],
-      genreIds: m['genre_ids'],
+      genreIds: (m['genre_ids'] as List).cast<int>(),
       id: m['id'],
       oriTitle: m['original_title'],
       oriLang: m['original_language'],

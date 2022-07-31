@@ -2,6 +2,7 @@ import 'package:jcs_test/models/detail.dart';
 import 'package:jcs_test/models/genre.dart';
 import 'package:jcs_test/models/movie-item.dart';
 
+import '../../models/movie-video.dart';
 import '../../models/paginated-data-ranged-time.dart';
 import '../../models/paginated-data.dart';
 import '../../models/search-result.dart';
@@ -15,6 +16,10 @@ abstract class MovieRemoteDataSource {
     String? region,
     int? year,
     int? primaryReleaseYear,
+  });
+  Future<MovieVideoModel> videos({
+    required int movieId,
+    String? language
   });
   Future<Iterable<GenreModel>> genres({String? language});
   Future<DetailModel> detail({
