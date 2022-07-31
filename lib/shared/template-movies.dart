@@ -72,9 +72,9 @@ class _TemplateMoviesState extends State<TemplateMovies> {
         _pagingController.refresh();
       },
       child: PagedGridView<int, MovieItemModel>(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 1/2
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: (MediaQuery.of(context).size.width/165).round(),
+            childAspectRatio: 1/2
           ),
           pagingController: _pagingController,
           builderDelegate: PagedChildBuilderDelegate<MovieItemModel>(
